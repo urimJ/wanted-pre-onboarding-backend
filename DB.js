@@ -19,6 +19,8 @@ try {
     console.error('Unable to connect to the database:', error);
 }
 
+// 개체
+
 // 회사(Corp)
 class Corp extends Model {}
 Corp.init(
@@ -93,5 +95,21 @@ Notice.init(
         }
     }
 )
+
+
+// 릴레이션
+
+// 회사 : 채용공고 = 일대다
+Corp.hasMany(Notice);
+Notice.belongsTo(Corp);
+
+// 사용자 : 채용공고 = 일대일
+User.belongsTo(Notice,
+    {
+        foreignKey: 'notice_id'
+    }
+);
+
+await sequelize.sync();
 
 //sequelize.close();
