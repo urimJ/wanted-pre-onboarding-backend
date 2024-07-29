@@ -94,6 +94,12 @@ Notice.init(
             allowNull: false
         }
     }
+    ,
+    {
+        sequelize,
+        modelName: 'Notice',
+        timestamps: false
+    }
 )
 
 
@@ -110,6 +116,7 @@ User.belongsTo(Notice,
     }
 );
 
-await sequelize.sync();
+await sequelize.sync({force: true});
+console.log('All models were synchronized successfully.');
 
 //sequelize.close();
