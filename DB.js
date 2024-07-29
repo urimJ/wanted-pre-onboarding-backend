@@ -46,7 +46,52 @@ Corp.init(
         modelName: 'Corp',
         timestamps: false
     }
-)
+);
 
+// 사용자(User)
+class User extends Model {}
+User.init(
+    {
+    user_id:{
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+        }
+    }
+    ,
+    {
+        sequelize,
+        modelName: 'User',
+        timestamps: false
+    }
+);
+
+// 채용공고(Notice)
+class Notice extends Model {}
+Notice.init(
+    {
+        notice_id: {
+            type: DataTypes.INTEGER,
+            primaryKey: true,
+            autoIncrement: true,
+        },
+        position: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        award: {
+            type: DataTypes.INTEGER,
+            allowNull: false
+        },
+        description: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        skill: {
+            type: DataTypes.STRING,
+            allowNull: false
+        }
+    }
+)
 
 //sequelize.close();
