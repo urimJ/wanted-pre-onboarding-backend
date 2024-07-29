@@ -1,14 +1,14 @@
-import { Sequelize } from "sequelize";
-import { config } from "dotenv";
+import { Sequelize, Model, DataTypes } from 'sequelize';
+import { config } from 'dotenv';
 config();
 
 const sequelize = new Sequelize(
-    DB_DATABASE,
-    DB_USERNAME,
-    DB_PASSWORD,
+    process.env.DB_DATABASE,
+    process.env.DB_USERNAME,
+    process.env.DB_PASSWORD,
     {
-        host: localhost,
-        dialect: mysql
+        host: process.env.DB_HOST,
+        dialect: 'mysql',
     }
 );
 
@@ -18,3 +18,35 @@ try {
 } catch(error){
     console.error('Unable to connect to the database:', error);
 }
+
+// 회사(Corp)
+class Corp extends Model {}
+Corp.init(
+    {
+        corp_id: {
+            type: DataTypes.INTEGER,
+            primaryKey: true,
+            autoIncrement: true,
+        },
+        name: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        country: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        area: {
+            type: DataTypes.STRING,
+            allowNull: false
+        }
+    },
+    {
+        sequelize,
+        modelName: 'Corp',
+        timestamps: false
+    }
+)
+
+
+//sequelize.close();
