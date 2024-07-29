@@ -26,6 +26,21 @@ app.get('/', async(req, res)=>{
     res.status(200).send(`randomNumber: ${randomNumber}`);
 })
 
+// RESTful API
+
+// 1. 채용공고 등록
+
+// 2. 채용공고 수정
+
+// 3. 채용공고 삭제
+
+// 4. 채용공고 목록 조회
+
+// 4-2. 채용공고 검색
+
+// 5. 채용상세 페이지
+
+// 6. 채용공고에 지원
 
 
 app.listen(port, ()=>{
