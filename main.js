@@ -1,8 +1,6 @@
 import express from 'express';
-import { User, Notice, Corp, initializeDatabase } from './db.js';
-import { QueryTypes } from 'sequelize';
+import { User, Notice, Corp } from './db.js'
 import con from './mysql.js';
-
 
 // express
 const app = express();
@@ -10,12 +8,6 @@ const port = 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
-
-
-// 데이터베이스 초기화(임의의 데이터 값을 한 번만 넣도록 조치)
-initializeDatabase().then(()=>{
-    console.log('Database initialized');
-})
 
 
 // RESTful API
