@@ -1,6 +1,4 @@
 import express from 'express';
-import con from '../mysql';
-
 import { User, Notice, Corp } from './db.js';
 
 // express
@@ -40,6 +38,33 @@ app.post('/post', async (req, res) =>{
 });
 
 // 2. 채용공고 수정
+app.put('/edit/:notice_id', async (req, res) =>{
+    try {
+        const { notice_id } = req.params;
+        const { position, award, description, skill } = req.body;
+        const editNotice = await Notice.update({
+            position: position,
+            award: award,
+            description: description,
+            skill: skill
+            },
+            {
+                where: { notice_id: notice_id }
+            }
+        );
+
+        res.status(201).send({
+            success: true,
+            message: '공고가 수정되었습니다.',
+            data: editNotice,
+        });
+
+    } catch (err) {
+        console.error('Error: ', err);
+        res.status(500).send('Internal Server Error');
+    }
+
+});
 
 // 3. 채용공고 삭제
 
