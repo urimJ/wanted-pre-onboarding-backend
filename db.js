@@ -19,7 +19,7 @@ try {
     console.error('Unable to connect to the database:', error);
 }
 
-// 개체
+// 모델
 
 // 회사(Corp)
 class Corp extends Model {}
@@ -107,27 +107,27 @@ Notice.init(
     }
 )
 
-// 지원내역 (AppStatus)
-class AppStatus extends Model {}
-AppStatus.init(
-    {
-        app_id: {
-            type: DataTypes.INTEGER,
-            primaryKey: true,
-            autoIncrement: true,
-        },
-        date: {
-            type: DataTypes.DATE,
-            allowNull: false,
-        }
-    }
-    ,
-    {
-        sequelize,
-        modelName: 'AppStatus',
-        timestamps: false
-    }
-)
+// // 지원내역 (AppStatus) <- 사용자와 채용공고가 N:M 관계가 아니므로 불필요함.
+// class AppStatus extends Model {}
+// AppStatus.init(
+//     {
+//         app_id: {
+//             type: DataTypes.INTEGER,
+//             primaryKey: true,
+//             autoIncrement: true,
+//         },
+//         date: {
+//             type: DataTypes.DATE,
+//             allowNull: false,
+//         }
+//     }
+//     ,
+//     {
+//         sequelize,
+//         modelName: 'AppStatus',
+//         timestamps: false
+//     }
+// )
 
 
 // 릴레이션
@@ -136,19 +136,15 @@ AppStatus.init(
 Corp.hasMany(Notice);
 Notice.belongsTo(Corp);
 
-// 사용자 : 채용공고 = 일대일
-User.belongsTo(Notice,
-    {
-        through: 'AppStatus',
-        foreignKey: 'notice_id'
-    }
-);
-
+// 채용공고 : 사용자 = 일대다
+Notice.hasMany(User);
+User.belongsTo(Notice);
 
 await sequelize.sync({force: true});
 console.log('All models were synchronized successfully.');
 
-// 데이터
+
+// 임의의 데이터
 
 // 사용자(50명)
 const users = await User.bulkCreate(
@@ -204,7 +200,7 @@ const users = await User.bulkCreate(
         { name: "김세영" },
         { name: "이수민" }
     ]
-)
+);
 
 // 회사(25개)
 const corps = await Corp.bulkCreate(
@@ -235,6 +231,53 @@ const corps = await Corp.bulkCreate(
         { name: 'PayPal', country: '미국', area: '캘리포니아, 산호세' },
         { name: 'VMware', country: '미국', area: '캘리포니아, 팔로 알토' }
     ]
-)
+);
+
+// 채용공고
+const notices = await Notice.bulkCreate(
+    [
+        { name: 'Google', position: '프론트엔드 주니어 개발자', award: 1000000, skill: 'Python', description: 'Google에서 프론트엔드 주니어 개발자를 채용합니다. 자격요건은..' },
+        { name: 'Google', position: '백엔드 시니어 개발자', award: 1200000, skill: 'Java', description: 'Google에서 백엔드 시니어 개발자를 채용합니다. 자격요건은..' },
+        { name: 'Microsoft', position: '백엔드 주니어 개발자', award: 1100000, skill: 'C++', description: 'Microsoft에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..' },
+        { name: 'Microsoft', position: '앱 개발자', award: 1300000, skill: 'Java', description: 'Microsoft에서 앱 개발자를 채용합니다. 자격요건은..' },
+        { name: 'Apple', position: '프론트엔드 시니어 개발자', award: 1500000, skill: 'Javascript', description: 'Apple에서 프론트엔드 시니어 개발자를 채용합니다. 자격요건은..' },
+        { name: 'Amazon', position: '보안 개발자', award: 1400000, skill: 'Python', description: 'Amazon에서 보안 개발자를 채용합니다. 자격요건은..' },
+        { name: 'Facebook (Meta)', position: '임베디드 개발자', award: 1300000, skill: 'C', description: 'Facebook (Meta)에서 임베디드 개발자를 채용합니다. 자격요건은..' },
+        { name: 'IBM', position: '프론트엔드 주니어 개발자', award: 1000000, skill: 'Javascript', description: 'IBM에서 프론트엔드 주니어 개발자를 채용합니다. 자격요건은..' },
+        { name: 'Oracle', position: '백엔드 시니어 개발자', award: 1200000, skill: 'Java', description: 'Oracle에서 백엔드 시니어 개발자를 채용합니다. 자격요건은..' },
+        { name: 'Intel', position: '앱 개발자', award: 1100000, skill: 'C++', description: 'Intel에서 앱 개발자를 채용합니다. 자격요건은..' },
+        { name: 'Cisco', position: '프론트엔드 시니어 개발자', award: 1500000, skill: 'Javascript', description: 'Cisco에서 프론트엔드 시니어 개발자를 채용합니다. 자격요건은..' },
+        { name: 'SAP', position: '백엔드 주니어 개발자', award: 1000000, skill: 'Python', description: 'SAP에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..' },
+        { name: 'SAP', position: '프론트엔드 시니어 개발자', award: 1200000, skill: 'Javascript', description: 'SAP에서 프론트엔드 시니어 개발자를 채용합니다. 자격요건은..' },
+        { name: 'SAP', position: '보안 개발자', award: 1400000, skill: 'Java', description: 'SAP에서 보안 개발자를 채용합니다. 자격요건은..' },
+        { name: 'SAP', position: '임베디드 개발자', award: 1300000, skill: 'C', description: 'SAP에서 임베디드 개발자를 채용합니다. 자격요건은..' },
+        { name: 'Dell Technologies', position: '임베디드 개발자', award: 1300000, skill: 'C', description: 'Dell Technologies에서 임베디드 개발자를 채용합니다. 자격요건은..' },
+        { name: 'Hewlett Packard Enterprise (HPE)', position: '보안 개발자', award: 1200000, skill: 'Java', description: 'Hewlett Packard Enterprise (HPE)에서 보안 개발자를 채용합니다. 자격요건은..' },
+        { name: 'Adobe', position: '프론트엔드 주니어 개발자', award: 1100000, skill: 'Javascript', description: 'Adobe에서 프론트엔드 주니어 개발자를 채용합니다. 자격요건은..' },
+        { name: 'Salesforce', position: '백엔드 시니어 개발자', award: 1400000, skill: 'C++', description: 'Salesforce에서 백엔드 시니어 개발자를 채용합니다. 자격요건은..' },
+        { name: 'NVIDIA', position: '앱 개발자', award: 1500000, skill: 'Java', description: 'NVIDIA에서 앱 개발자를 채용합니다. 자격요건은..' },
+        { name: 'Tencent', position: '프론트엔드 시니어 개발자', award: 1200000, skill: 'Javascript', description: 'Tencent에서 프론트엔드 시니어 개발자를 채용합니다. 자격요건은..' },
+        { name: 'Alibaba', position: '임베디드 개발자', award: 1000000, skill: 'C', description: 'Alibaba에서 임베디드 개발자를 채용합니다. 자격요건은..' },
+        { name: 'Sony', position: '보안 개발자', award: 1300000, skill: 'Python', description: 'Sony에서 보안 개발자를 채용합니다. 자격요건은..' },
+        { name: 'Samsung Electronics', position: '프론트엔드 주니어 개발자', award: 1100000, skill: 'Javascript', description: 'Samsung Electronics에서 프론트엔드 주니어 개발자를 채용합니다. 자격요건은..' },
+        { name: 'LG Electronics', position: '백엔드 시니어 개발자', award: 1400000, skill: 'Java', description: 'LG Electronics에서 백엔드 시니어 개발자를 채용합니다. 자격요건은..' },
+        { name: 'Xiaomi', position: '앱 개발자', award: 1000000, skill: 'C++', description: 'Xiaomi에서 앱 개발자를 채용합니다. 자격요건은..' },
+        { name: 'Lenovo', position: '프론트엔드 시니어 개발자', award: 1500000, skill: 'Javascript', description: 'Lenovo에서 프론트엔드 시니어 개발자를 채용합니다. 자격요건은..' },
+        { name: 'Qualcomm', position: '백엔드 주니어 개발자', award: 1200000, skill: 'Python', description: 'Qualcomm에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..' },
+        { name: 'PayPal', position: '임베디드 개발자', award: 1300000, skill: 'C', description: 'PayPal에서 임베디드 개발자를 채용합니다. 자격요건은..' },
+        { name: 'VMware', position: '보안 개발자', award: 1400000, skill: 'Java', description: 'VMware에서 보안 개발자를 채용합니다. 자격요건은..' }
+
+    ]
+);
+
+// // 지원내역
+// const appStatuses = await AppStatus.bulkCreate(
+//     [
+//         {date: new Date()},
+//         {date: new Date()},
+//         {date: new Date()}
+//     ]
+
+// );
 
 //sequelize.close();
