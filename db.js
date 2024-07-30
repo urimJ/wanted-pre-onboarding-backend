@@ -2,6 +2,7 @@ import { Sequelize, Model, DataTypes } from 'sequelize';
 import { config } from 'dotenv';
 config();
 
+// Sequelize
 const sequelize = new Sequelize(
     process.env.DB_DATABASE,
     process.env.DB_USERNAME,
@@ -107,7 +108,7 @@ Notice.init(
     }
 )
 
-// // 지원내역 (AppStatus) <- 사용자와 채용공고가 N:M 관계가 아니므로 불필요함.
+// // 지원내역(AppStatus) <- 사용자와 채용공고가 N:M 관계가 아니므로 불필요함.
 // class AppStatus extends Model {}
 // AppStatus.init(
 //     {
@@ -139,6 +140,7 @@ Notice.belongsTo(Corp);
 // 채용공고 : 사용자 = 일대다
 Notice.hasMany(User);
 User.belongsTo(Notice);
+
 
 await sequelize.sync({force: true});
 console.log('All models were synchronized successfully.');
@@ -233,7 +235,7 @@ const corps = await Corp.bulkCreate(
     ]
 );
 
-// 채용공고
+// 채용공고(30개)
 const notices = await Notice.bulkCreate(
     [
         { name: 'Google', position: '프론트엔드 주니어 개발자', award: 1000000, skill: 'Python', description: 'Google에서 프론트엔드 주니어 개발자를 채용합니다. 자격요건은..', CorpCorpId: 1 },
