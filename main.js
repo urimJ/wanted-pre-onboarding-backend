@@ -1,6 +1,7 @@
 import express from 'express';
 import { User, Notice, Corp } from './db.js'
 import con from './mysql.js';
+import { QueryTypes } from 'sequelize';
 
 // express
 const app = express();
@@ -148,6 +149,75 @@ app.get('/search/:key', async (req, res) =>{
 });
 
 // 5. 채용상세 페이지
+app.get('/noticeDetail/:notice_id', async (req, res) =>{
+    try {
+        const { notice_id } = req.params;
+        const noticeDetail = await Notice.findOne({
+            attributes: ['notice_id', 'position', 'award', 'skill', 'description'],
+            include: {
+                model: Corp,
+                attributes: ['name', 'country', 'area']
+            },
+            where: {
+                notice_id: notice_id,   // 해당 채용공고의 회사 이름
+            },
+        });
+
+        if (!noticeDetail) {
+            return res.status(404).send({
+                success: false,
+                message: '공고를 찾을 수 없습니다.',
+            });
+        }
+        //console.log('noticeDetail:', noticeDetail);
+
+        // 해당 회사의 모든 공고
+        const query = `
+            SELECT n.notice_id from Notices n
+            INNER JOIN Corps c ON c.corp_id = n.CorpCorpId
+            WHERE c.name = ?                        
+        `;
+        const replacements = [noticeDetail.Corp.name];   // 해당 채용 공고의 회사 이름으로 찾기
+        con.query(query, replacements, (error, results) => {
+            if (error) {
+                console.error('Error: ', error);
+                return res.status(500).send('Internal Server Error');
+            }
+
+            //console.log('results: ', results);
+
+            // 해당 회사의 현재 공고를 제외한 나머지 공고 목록
+            const arrAllNotices = results.map(item=>item.notice_id);
+            const numberNoticeId = parseInt(notice_id);   // notice_id가 문자열이므로 정수로 변환
+            const arrOtherNotices = arrAllNotices.filter(item => item !== numberNoticeId);
+
+            //console.log('type of notice_id:', typeof notice_id);
+            
+            // 결과값 예시와 같이 변환
+            const detail = {
+                notice_id: noticeDetail.notice_id,
+                name: noticeDetail.Corp.name,
+                country: noticeDetail.Corp.country,
+                area: noticeDetail.Corp.area,
+                position: noticeDetail.position,
+                award: noticeDetail.award,
+                skill: noticeDetail.skill,
+                description: noticeDetail.description,
+                otherNotices: arrOtherNotices,
+            };
+
+            res.status(200).send({
+                success: true,
+                message: '검색 결과를 조회합니다.',
+                data: detail,
+            });
+        });
+
+    } catch (err) {
+        console.error('Error: ', err);
+        res.status(500).send('Internal Server Error');
+    }
+});
 
 
 // 6. 채용공고에 지원
