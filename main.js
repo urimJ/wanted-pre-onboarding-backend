@@ -88,6 +88,41 @@ app.delete('/delete/:notice_id', async (req, res) =>{
 });
 
 // 4. 채용공고 목록 조회
+app.get('/notices', async (req, res) =>{
+    try {
+        const notices = await Notice.findAll({
+            attributes: ['notice_id', 'position', 'award', 'skill'],
+            include: {
+                model: Corp,
+                attributes: ['name', 'country', 'area']
+            }
+        });
+        
+        // 결과값 예시와 같이 변환
+        const noticeList = notices.map(item => {
+            return {
+                notice_id: item.notice_id,
+                name: item.Corp.name,
+                country: item.Corp.country,
+                area: item.Corp.area,
+                position: item.position,
+                award: item.award,
+                skill: item.skill
+            };
+        });
+
+        res.status(200).send({
+            success: true,
+            message: '공고 목록을 조회합니다.',
+            data: noticeList,
+        });
+
+    } catch (err) {
+        console.error('Error: ', err);
+        res.status(500).send('Internal Server Error');
+    }
+
+});
 
 // 4-2. 채용공고 검색
 
