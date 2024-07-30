@@ -14,15 +14,14 @@ const sequelize = new Sequelize(
     }
 );
 
-// 데이터베이스 초기화 함수
-async function initializeDatabase(){
-    try {
-        await sequelize.authenticate();
-        console.log('Connection has been established successfully.');
-    } catch(error){
-        console.error('Unable to connect to the database:', error);
-    }
+
+try {
+    await sequelize.authenticate();
+    console.log('Connection has been established successfully.');
+} catch(error){
+    console.error('Unable to connect to the database:', error);
 }
+
 
 // 모델
 
@@ -144,6 +143,7 @@ Notice.belongsTo(Corp);
 // 채용공고 : 사용자 = 일대다
 Notice.hasMany(User);
 User.belongsTo(Notice);
+
 
 // 스키마 동기화(스키마가 이미 존재하는 경우 무시)
 await sequelize.sync();
