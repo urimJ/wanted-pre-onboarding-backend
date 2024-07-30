@@ -1,5 +1,8 @@
 import express from 'express';
 import { User, Notice, Corp } from './db.js';
+import { QueryTypes } from 'sequelize';
+import con from './mysql.js';
+
 
 // express
 const app = express();
@@ -88,7 +91,7 @@ app.delete('/delete/:notice_id', async (req, res) =>{
 });
 
 // 4. 채용공고 목록 조회
-app.get('/notices', async (req, res) =>{
+app.get('/list', async (req, res) =>{
     try {
         const notices = await Notice.findAll({
             attributes: ['notice_id', 'position', 'award', 'skill'],
@@ -125,8 +128,30 @@ app.get('/notices', async (req, res) =>{
 });
 
 // 4-2. 채용공고 검색
+app.get('/search/:key', async (req, res) =>{
+    const { key } = req.params;  // 검색 키
+    const query = `
+        SELECT n.notice_id, c.name, c.country, c.area, n.position, n.award, n.skill 
+        FROM Notices n
+        INNER JOIN Corps c ON n.CorpCorpId = c.corp_id
+        WHERE n.skill LIKE ? OR c.name LIKE ?
+        `;
+    const replacements = [`%${key}%`, `%${key}%`]   // '%'를 사용해 부분 일치 적용
+    con.query(query, replacements, (error, results) => {
+        if (error) {
+            console.error('Error: ', error);
+            return res.status(500).send('Internal Server Error');
+        }
+        res.status(200).send({
+            success: true,
+            message: '검색 결과를 조회합니다.',
+            data: results,
+        });
+    });
+});
 
 // 5. 채용상세 페이지
+
 
 // 6. 채용공고에 지원
 
