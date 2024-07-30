@@ -58,7 +58,12 @@ User.init(
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
-        }
+    },
+    name: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+        
     }
     ,
     {
@@ -102,6 +107,28 @@ Notice.init(
     }
 )
 
+// 지원내역 (AppStatus)
+class AppStatus extends Model {}
+AppStatus.init(
+    {
+        app_id: {
+            type: DataTypes.INTEGER,
+            primaryKey: true,
+            autoIncrement: true,
+        },
+        date: {
+            type: DataTypes.DATE,
+            allowNull: false,
+        }
+    }
+    ,
+    {
+        sequelize,
+        modelName: 'AppStatus',
+        timestamps: false
+    }
+)
+
 
 // 릴레이션
 
@@ -112,11 +139,18 @@ Notice.belongsTo(Corp);
 // 사용자 : 채용공고 = 일대일
 User.belongsTo(Notice,
     {
+        through: 'AppStatus',
         foreignKey: 'notice_id'
     }
 );
 
+
 await sequelize.sync({force: true});
 console.log('All models were synchronized successfully.');
+
+// 데이터
+
+
+
 
 //sequelize.close();
