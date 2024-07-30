@@ -270,14 +270,6 @@ const notices = await Notice.bulkCreate(
     ]
 );
 
-// // 지원내역
-// const appStatuses = await AppStatus.bulkCreate(
-//     [
-//         {date: new Date()},
-//         {date: new Date()},
-//         {date: new Date()}
-//     ]
-
-// );
+export {User, Notice, Corp};
 
 //sequelize.close();

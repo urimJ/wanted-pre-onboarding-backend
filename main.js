@@ -1,34 +1,43 @@
 import express from 'express';
-//import cors from 'cors';
-//import con from '../mysql';
+import con from '../mysql';
+
+import { User, Notice, Corp } from './db.js';
 
 // express
 const app = express();
 const port = 3000;
 
-// cors
-// const corsOptions = {
-//     origin: "http://localhost:3000",
-//     credential: true,
-// };
-
-//app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
-// localhost:3000 웹페이지 테스트
-const getRandomInt = (max) => {
-    return Math.floor(Math.random() * max);
-}
 
-app.get('/', async(req, res)=>{
-    let randomNumber = getRandomInt(3);
-    res.status(200).send(`randomNumber: ${randomNumber}`);
-})
 
 // RESTful API
 
 // 1. 채용공고 등록
+app.post('/post', async (req, res) =>{
+    try {
+        const { corp_id, position, award, description, skill } = req.body;
+        const postNotice = await Notice.create({
+            position: position,
+            award: award,
+            description: description,
+            skill: skill,
+            CorpCorpId: corp_id
+        }) 
+
+        res.status(201).send({
+            success: true,
+            message: '공고가 등록되었습니다.',
+            data: postNotice,
+        });
+
+    } catch (err) {
+        console.error('Error: ', err);
+        res.status(500).send('Internal Server Error');
+    }
+
+});
 
 // 2. 채용공고 수정
 
