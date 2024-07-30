@@ -67,6 +67,25 @@ app.put('/edit/:notice_id', async (req, res) =>{
 });
 
 // 3. 채용공고 삭제
+app.delete('/delete/:notice_id', async (req, res) =>{
+    try {
+        const { notice_id } = req.params;
+        const deleteNotice = await Notice.destroy({
+            where: { notice_id: notice_id }
+        });
+
+        res.status(200).send({
+            success: true,
+            message: '공고가 삭제되었습니다.',
+            data: deleteNotice,
+        });
+
+    } catch (err) {
+        console.error('Error: ', err);
+        res.status(500).send('Internal Server Error');
+    }
+
+});
 
 // 4. 채용공고 목록 조회
 
