@@ -10,6 +10,7 @@ const sequelize = new Sequelize(
     {
         host: process.env.DB_HOST,
         dialect: 'mysql',
+        logging: false
     }
 );
 
@@ -142,7 +143,7 @@ Notice.hasMany(User);
 User.belongsTo(Notice);
 
 
-await sequelize.sync({force: true});
+//await sequelize.sync({force: true});
 console.log('All models were synchronized successfully.');
 
 
