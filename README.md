@@ -27,16 +27,9 @@
 
 ### 설치 방법
 
-1. 저장소를 클론합니다.
     ```sh
-    git clone https://github.com/urimJ/wanted-pre-onboarding-backend.git
-    ```
-2. 프로젝트 디렉토리로 이동합니다.
-    ```sh
-    cd wanted-pre-onboarding-backend
-    ```
-3. 필요한 패키지를 설치합니다.
-    ```sh
+    git clone https://github.com/urimJ/wanted-pre-onboarding-backend.git  
+    cd wanted-pre-onboarding-backend  
     npm i
     ```
 
@@ -57,7 +50,6 @@
 
 ### 실행 방법
 
-1. 개발 서버를 실행합니다.
     ```sh  
     node app.js
     ```
