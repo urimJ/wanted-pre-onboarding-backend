@@ -13,18 +13,22 @@ import { Notice, Corp, User } from '../models/index.js';
 
 // 단위 테스트(unit test)
 
-describe('Controllers tests', () => {
-    let createStub;
+describe('Controllers tests-----', () => {
+    let createStub, updateStub, destroyStub;
 
     beforeEach(()=>{
         createStub = sinon.stub(Notice, 'create');
+        updateStub = sinon.stub(Notice, 'update');
+        destroyStub = sinon.stub(Notice, 'destroy');
     });
 
     afterEach(()=>{
         createStub.restore();
+        updateStub.restore();
+        destroyStub.restore();
     });
 
-    describe('postNotice', () =>{
+    describe('---postNotice---', () =>{
         it('should create a notice successfully', async() =>{
             const req = {
                 params: { corp_id: 1 },
@@ -100,4 +104,94 @@ describe('Controllers tests', () => {
             expect(res.send.calledWith('Internal Server Error')).to.be.true;
         });
     });
+
+    describe('---editNotice---', () =>{
+        it('should edit a notice successfully', async() =>{
+            const req = {
+                params: { notice_id: 1 },
+                body: {
+                    position: '시니어 개발자',
+                    description: '구글에서 시니어 개발자를 모집 중입니다. 자격 요건은..'
+                }
+            };
+            const res = {
+                status: sinon.stub().returnsThis(),
+                send: sinon.stub()
+            };
+            const updatedNotice = [1]; // Sequelize update returns number of affected rows
+
+            updateStub.resolves(updatedNotice);
+
+            await editNotice(req, res);
+
+            expect(res.status.calledWith(201)).to.be.true;
+            expect(res.send.calledWith({
+                success: true,
+                message: '공고가 수정되었습니다.',
+                data: updatedNotice
+            })).to.be.true;
+        });
+
+        it('should handle errors', async() =>{
+            const req = {
+                params: { notice_id: 1 },
+                body: {
+                    position: '시니어 개발자',
+                    description: '구글에서 시니어 개발자를 모집 중입니다. 자격 요건은..'
+                }
+            };
+            const res = {
+                status: sinon.stub().returnsThis(),
+                send: sinon.stub()
+            };
+
+            updateStub.rejects(new Error('Error updating notice'));
+
+            await editNotice(req, res);
+
+            expect(res.status.calledWith(500)).to.be.true;
+            expect(res.send.calledWith('Internal Server Error')).to.be.true;
+        });
+    });
+
+    describe('---deleteNotice---', () => {
+        it('should delete a notice successfully', async () => {
+            const req = {
+                params: { notice_id: 1 }
+            };
+            const res = {
+                status: sinon.stub().returnsThis(),
+                send: sinon.stub()
+            };
+        
+            destroyStub.resolves(1); // Sequelize destroy returns number of affected rows
+        
+            await deleteNotice(req, res);
+        
+            expect(res.status.calledWith(200)).to.be.true;
+            expect(res.send.calledWith({
+                success: true,
+                message: '공고가 삭제되었습니다.',
+                data: 1
+            })).to.be.true;
+            });
+        
+            it('should handle errors', async () => {
+            const req = {
+                params: { notice_id: 1 }
+            };
+            const res = {
+                status: sinon.stub().returnsThis(),
+                send: sinon.stub()
+            };
+        
+            destroyStub.rejects(new Error('Error deleting notice'));
+        
+            await deleteNotice(req, res);
+        
+            expect(res.status.calledWith(500)).to.be.true;
+            expect(res.send.calledWith('Internal Server Error')).to.be.true;
+            });
+        });
+
 });
