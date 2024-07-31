@@ -186,7 +186,7 @@ export const noticeDetail = async (req, res) => {
 
             res.status(200).send({
                 success: true,
-                message: '검색 결과를 조회합니다.',
+                message: '채용공고 상세입니다.',
                 data: detail,
             });
         });
