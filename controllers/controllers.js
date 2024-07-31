@@ -7,6 +7,12 @@ export const postNotice = async (req, res) => {
     try {
         const { corp_id } = req.params;
         const { position, award, description, skill } = req.body;
+
+        // 필수 필드 유효성 검사
+        if (!position || !award || !description || !skill) {
+            return res.status(400).send('Bad Request: Missing required fields');
+        }
+        
         const postNotice = await Notice.create({
             position,
             award,
