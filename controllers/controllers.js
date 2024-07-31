@@ -5,7 +5,8 @@ import con from '../config/mysql.js'
 // 1. 채용공고 등록
 export const postNotice = async (req, res) => {
     try {
-        const { corp_id, position, award, description, skill } = req.body;
+        const { corp_id } = req.params;
+        const { position, award, description, skill } = req.body;
         const postNotice = await Notice.create({
             position,
             award,
