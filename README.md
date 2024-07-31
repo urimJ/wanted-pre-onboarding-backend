@@ -1,5 +1,5 @@
 # 프리온보딩 백엔드 인턴십 선발 과제
-![Uploading image.png…]()
+![intern](https://github.com/user-attachments/assets/feb6e9b6-db35-401a-bba3-abed4e0ed873)
 
 ## 목차
 
