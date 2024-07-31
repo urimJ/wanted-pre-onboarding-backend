@@ -68,7 +68,7 @@
 - 프레임워크: Node.js, Express.js
 - ORM: Sequelize
 - 데이터베이스: MySQL
-- 테스트: mocha, chai, sinon
+- 테스트: Mocha, Chai, Sinon
 - 기타: Thunder Client
 
 ## 기능 설명
