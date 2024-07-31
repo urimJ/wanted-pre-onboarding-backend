@@ -14,18 +14,20 @@ import { Notice, Corp, User } from '../models/index.js';
 // 단위 테스트(unit test)
 
 describe('Controllers tests-----', () => {
-    let createStub, updateStub, destroyStub;
+    let createStub, updateStub, destroyStub, findAllStub;
 
     beforeEach(()=>{
         createStub = sinon.stub(Notice, 'create');
         updateStub = sinon.stub(Notice, 'update');
         destroyStub = sinon.stub(Notice, 'destroy');
+        findAllStub = sinon.stub(Notice, 'findAll');
     });
 
     afterEach(()=>{
         createStub.restore();
         updateStub.restore();
         destroyStub.restore();
+        findAllStub.restore();
     });
 
     describe('---postNotice---', () =>{
@@ -194,4 +196,63 @@ describe('Controllers tests-----', () => {
             });
         });
 
+    describe('---list---', () => {
+        
+        it('should list notices successfully', async () => {
+            const notices = [
+                {
+                    notice_id: 1,
+                    position: '주니어 백엔드 개발자',
+                    award: 1000000,
+                    skill: 'Javascript',
+                    Corp: {
+                        name: 'Google',
+                        country: '미국',
+                        area: '캘리포니아, 마운틴 뷰'
+                    }
+                }
+            ];
+            findAllStub.resolves(notices);
+
+            const req = {};
+            const res = {
+                status: sinon.stub().returnsThis(),
+                send: sinon.stub()
+            };
+
+            await list(req, res);
+
+            expect(res.status.calledWith(200)).to.be.true;
+            expect(res.send.calledWith({
+                success: true,
+                message: '공고 목록을 조회합니다.',
+                data: [
+                    {
+                        notice_id: 1,
+                        name: 'Google',
+                        country: '미국',
+                        area: '캘리포니아, 마운틴 뷰',
+                        position: '주니어 백엔드 개발자',
+                        award: 1000000,
+                        skill: 'Javascript'
+                    }
+                ]
+            })).to.be.true;
+        });
+
+        it('should handle errors', async () => {
+            findAllStub.rejects(new Error('Error fetching notices'));
+
+            const req = {};
+            const res = {
+                status: sinon.stub().returnsThis(),
+                send: sinon.stub()
+            };
+
+            await list(req, res);
+
+            expect(res.status.calledWith(500)).to.be.true;
+            expect(res.send.calledWith('Internal Server Error')).to.be.true;
+        });
+    });
 });
