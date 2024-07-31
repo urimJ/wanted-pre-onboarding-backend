@@ -109,7 +109,7 @@ npm test
     ├── routes/
     │   └── routes.js
     ├── test/
-    │   └── controller.test.js
+    │   └── controllers.test.js
     ├── .gitignore
     ├── README.md
     ├── app.js
