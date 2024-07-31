@@ -11,7 +11,7 @@ from '../controllers/controllers.js';
 
 const router = express.Router();
 
-router.post('/post', postNotice);                             // 1. 채용공고 등록
+router.post('/post', postNotice);                       // 1. 채용공고 등록
 router.put('/edit/:notice_id', editNotice);             // 2. 채용공고 수정
 router.delete('delete/:notice_id', deleteNotice);       // 3. 채용공고 삭제
 router.get('/list', list);                              // 4. 채용공고 목록 조회
