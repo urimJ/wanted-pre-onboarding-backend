@@ -12,7 +12,7 @@ export const postNotice = async (req, res) => {
         if (!position || !award || !description || !skill) {
             return res.status(400).send('Bad Request: Missing required fields');
         }
-        
+
         const postNotice = await Notice.create({
             position,
             award,
@@ -202,6 +202,7 @@ export const apply = async (req, res) => {
         const { notice_id, user_id } = req.params;
 
         const user = await User.findOne({ where: { user_id } });
+        // 사용자는 1회만 지원 가능
         if (user.NoticeNoticeId === null) {
             await User.update(
                 { NoticeNoticeId: notice_id },
