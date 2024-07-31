@@ -221,6 +221,63 @@ app.get('/noticeDetail/:notice_id', async (req, res) =>{
 
 
 // 6. 채용공고에 지원
+app.put('/apply/:notice_id/:user_id', async (req, res) =>{
+    try {
+        const { notice_id, user_id } = req.params;
+
+        const check = await User.findOne({
+            where: {
+                user_id: user_id
+            }
+
+        });
+        // 사용자는 1회만 지원 가능하므로 지원 여부를 조건문으로 확인
+        if(check.NoticeNoticeId === null){
+            await User.update({
+                NoticeNoticeId: notice_id
+                },
+                {
+                    where: { user_id: user_id }
+                }
+            );
+            const applied = await User.findOne({
+                attributes: ['NoticeNoticeId', 'user_id'],
+                where: {
+                    user_id: user_id
+                }
+            })
+            res.status(201).send({
+                success: true,
+                message: '해당 공고에 지원되었습니다.',
+                data: applied,
+            });
+        } else {
+            res.status(409).send({      
+                //This response is sent when a request conflicts with the current state of the server.
+                success: false,
+                message: '이미 지원한 사용자입니다.'
+            })
+        }
+        
+    } catch (err) {
+        console.error('Error: ', err);
+        res.status(500).send('Internal Server Error');
+    }
+
+});
+
+
+// console.log 확인용 함수
+// app.get('/user/:user_id', async(req, res)=>{
+//     const { user_id } = req.params; 
+//     const check = await User.findOne({
+//         where: {
+//             user_id: user_id
+//         }
+//     });
+//     console.log('check: ', check);
+//     console.log('noticeId: ', check.NoticeNoticeId);
+// });
 
 
 app.listen(port, ()=>{
