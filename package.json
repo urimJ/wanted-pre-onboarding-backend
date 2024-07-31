@@ -15,9 +15,11 @@
     "chai": "^5.1.1",
     "jest": "^29.7.0",
     "mocha": "^10.7.0",
+    "nyc": "^17.0.0",
     "sinon": "^18.0.0"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "nyc mocha",
+    "coverage": "nyc --reporter html npm test"
   }
 }
