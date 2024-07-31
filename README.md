@@ -27,11 +27,12 @@
 
 ### 설치 방법
 
-    ```sh
-    git clone https://github.com/urimJ/wanted-pre-onboarding-backend.git  
-    cd wanted-pre-onboarding-backend  
-    npm i
-    ```
+```sh
+git clone https://github.com/urimJ/wanted-pre-onboarding-backend.git  
+cd wanted-pre-onboarding-backend  
+npm i
+```
+
 
 ### 데이터베이스 설정
 
@@ -50,9 +51,9 @@
 
 ### 실행 방법
 
-    ```sh  
+      
     node app.js
-    ```
+    
 
 ## 기술 스택
 
@@ -91,7 +92,7 @@
 ### 단위 테스트
 
 프로젝트의 단위 테스트(Unit test)는 `test` 디렉토리 내에 위치합니다. 유닛 테스트를 실행하려면 아래 명령어를 사용합니다.  
-```  
+```sh  
 npm test
 ```
 
