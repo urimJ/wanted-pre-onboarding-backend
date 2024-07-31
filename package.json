@@ -19,7 +19,6 @@
     "sinon": "^18.0.0"
   },
   "scripts": {
-    "test": "nyc mocha",
-    "coverage": "nyc --reporter html npm test"
+    "test": "mocha"
   }
 }
