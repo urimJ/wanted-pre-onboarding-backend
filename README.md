@@ -33,7 +33,7 @@
     ```
 2. 프로젝트 디렉토리로 이동합니다.
     ```sh
-    cd [프로젝트 디렉토리]
+    cd wanted-pre-onboarding-backend
     ```
 3. 필요한 패키지를 설치합니다.
     ```sh
@@ -99,12 +99,12 @@
 ### 단위 테스트
 
 프로젝트의 단위 테스트(Unit test)는 `test` 디렉토리 내에 위치합니다. 유닛 테스트를 실행하려면 아래 명령어를 사용합니다.  
-    ```  
-    npm test
-    ```
+```  
+npm test
+```
 
 ## 프로젝트 구조
-    프로젝트 루트/
+    wanted-pre-onboarding-backend/
     ├── config/
     │   ├── database.js
     │   └── mysql.js
